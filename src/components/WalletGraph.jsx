@@ -16,55 +16,9 @@ import {
   addEdge,
 } from "../redux/slices/graphSlice";
 import "@xyflow/react/dist/style.css";
-import * as htmlToImage from 'html-to-image';
+import * as htmlToImage from "html-to-image";
 
-const GraphContent = ({
-  isDarkMode,
-  nodes,
-  edges,
-  onNodesChange,
-  onEdgesChange,
-  onConnect,
-}) => {
-  const reactFlowWrapper = useRef(null);
-  const [hoveredNode, setHoveredNode] = useState(null);
-  const reactFlowInstance = useRef(null); // Ref to store ReactFlow instance
-
-  const exportImage = useCallback(() => {
-    const reactFlowElement = reactFlowWrapper.current?.querySelector('.react-flow');
-  
-    if (!reactFlowElement) {
-      console.error("React Flow canvas not found.");
-      return;
-    }
-  
-    htmlToImage.toPng(reactFlowElement, {
-      backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-      filter: (node) => {
-        // Filter out minimap, controls, etc.
-        if (
-          node?.classList?.contains('react-flow__controls') ||
-          node?.classList?.contains('react-flow__minimap')
-        ) {
-          return false;
-        }
-        return true;
-      },
-    })
-      .then((dataUrl) => {
-        const link = document.createElement('a');
-        link.download = 'wallet-graph.png';
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.error('PNG export failed:', err);
-      });
-  }, [isDarkMode]);
-  
-  
-  
-  
+const HoveredTooltip = ({ hoveredNode, isDarkMode, reactFlowWrapper }) => {
   const getTooltipPosition = (node) => {
     const wrapper = reactFlowWrapper.current;
     if (!wrapper) return { x: 0, y: 0 };
@@ -82,9 +36,97 @@ const GraphContent = ({
 
     return { x, y };
   };
+  return (
+    <div
+      className={`absolute p-2 border rounded shadow-lg z-10 ${
+        isDarkMode
+          ? "bg-gray-800 text-white border-gray-600"
+          : "bg-white text-black border-gray-300"
+      }`}
+      style={{
+        left: getTooltipPosition(hoveredNode).x,
+        top: getTooltipPosition(hoveredNode).y,
+        // maxWidth: "200px",
+        fontSize: "12px",
+      }}
+    >
+      <p>
+        <strong>Address:</strong>{" "}
+        {hoveredNode.data.realAddress || hoveredNode.id}
+      </p>
+      <p>
+        <strong>Entity:</strong> {hoveredNode.data.entity || "Unknown"}
+      </p>
+      <p>
+        <strong>Amount:</strong> {hoveredNode.data.amount || "N/A"}
+      </p>
+      <p>
+        <strong>Token Type:</strong> {hoveredNode.data.tokenType || "BTC"}
+      </p>
+      <p>
+        <strong>Transaction Type:</strong>{" "}
+        {hoveredNode.data.transactionType || "Normal Tx"}
+      </p>
+      <p>
+        <strong>Date:</strong> {hoveredNode.data.date || "N/A"}
+      </p>
+    </div>
+  );
+};
+
+const GraphContent = ({
+  isDarkMode,
+  nodes,
+  edges,
+  onNodesChange,
+  onEdgesChange,
+  onConnect,
+}) => {
+  const reactFlowWrapper = useRef(null);
+  const [hoveredNode, setHoveredNode] = useState(null);
+  const reactFlowInstance = useRef(null); // Ref to store ReactFlow instance
+
+  const exportImage = useCallback(() => {
+    const reactFlowElement =
+      reactFlowWrapper.current?.querySelector(".react-flow");
+
+    if (!reactFlowElement) {
+      console.error("React Flow canvas not found.");
+      return;
+    }
+
+    htmlToImage
+      .toPng(reactFlowElement, {
+        backgroundColor: isDarkMode ? "#1f2937" : "#ffffff",
+        filter: (node) => {
+          // Filter out minimap, controls, etc.
+          if (
+            node?.classList?.contains("react-flow__controls") ||
+            node?.classList?.contains("react-flow__minimap")
+          ) {
+            return false;
+          }
+          return true;
+        },
+      })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "wallet-graph.png";
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.error("PNG export failed:", err);
+      });
+  }, [isDarkMode]);
 
   return (
-    <div ref={reactFlowWrapper} id="reactflow-canvas" className="h-full w-full relative" style={{height: '100vh'}}>
+    <div
+      ref={reactFlowWrapper}
+      id="reactflow-canvas"
+      className="h-full w-full relative"
+      style={{ height: "100vh" }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -177,41 +219,11 @@ const GraphContent = ({
           Export SVG
         </button>
         {hoveredNode && (
-          <div
-            className={`absolute p-2 border rounded shadow-lg z-10 ${
-              isDarkMode
-                ? "bg-gray-800 text-white border-gray-600"
-                : "bg-white text-black border-gray-300"
-            }`}
-            style={{
-              left: getTooltipPosition(hoveredNode).x,
-              top: getTooltipPosition(hoveredNode).y,
-              // maxWidth: "200px",
-              fontSize: "12px",
-            }}
-          >
-            <p>
-              <strong>Address:</strong>{" "}
-              {hoveredNode.data.realAddress || hoveredNode.id}
-            </p>
-
-            <p>
-              <strong>Entity:</strong> {hoveredNode.data.entity || "Unknown"}
-            </p>
-            <p>
-              <strong>Amount:</strong> {hoveredNode.data.amount || "N/A"}
-            </p>
-            <p>
-              <strong>Token Type:</strong> {hoveredNode.data.tokenType || "BTC"}
-            </p>
-            <p>
-              <strong>Transaction Type:</strong>{" "}
-              {hoveredNode.data.transactionType || "Normal Tx"}
-            </p>
-            <p>
-              <strong>Date:</strong> {hoveredNode.data.date || "N/A"}
-            </p>
-          </div>
+          <HoveredTooltip
+            hoveredNode={hoveredNode}
+            isDarkMode={isDarkMode}
+            reactFlowWrapper={reactFlowWrapper}
+          />
         )}
       </ReactFlow>
     </div>
