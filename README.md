@@ -1,12 +1,49 @@
-# React + Vite
+# 💸 Wallet Graph Visualization
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Visualize cryptocurrency wallet transactions in an interactive and intuitive graph using **React**, **Redux**, **React Flow**, and **Vite**. This tool helps blockchain analysts and developers explore inflow/outflow wallet connections visually.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Overview
 
-## Expanding the ESLint configuration
+This project renders a dynamic wallet transaction graph with:
+- 🧠 Nodes = Wallet Addresses
+- 🔗 Edges = Inflow/Outflow Transactions
+- ✨ Real-time Interactions: Drag, Pan, Zoom
+- 💾 Redux for Global State Management
+- 🌗 Dark Mode
+- 📤 Export to PNG using `html-to-image`
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Powered by **React Flow** and built with **Vite** for fast dev cycles.
+
+---
+
+## ✨ Features
+
+- 🔄 Dynamic Graph Rendering (React Flow)
+- 🌓 Dark Mode Toggle
+- 📤 Export Graph as PNG
+- 📥 Inflow / Outflow Mapping
+- ➕ Dynamic Node Addition via Sidebar
+- 🔗 Connect Wallets via Edges
+- ⚡ Vite + SWC for Fast HMR
+- 🎯 Redux Toolkit State Management
+- 🎨 Custom Node & Edge Styles
+
+---
+
+## 📦 Installation
+
+### Prerequisites
+
+- Node.js `v16+`
+- npm
+
+### Setup
+
+```bash
+git clone https://github.com/git21221/hornet-assessment.git
+cd hornet-assessment
+npm install
+npm run dev
+```
