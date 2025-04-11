@@ -298,7 +298,7 @@ const WalletGraph = ({ inflowData, outflowData, initialAddress }) => {
       }
       edgeLabels.set(
         `${payer}-${initialAddress || "default_wallet"}`,
-        `${tx.amount} / ${tx.date || tx.date_time || "N/A"}`
+        `${tx.amount} | ${tx.date || tx.date_time || "N/A"}`
       );
     });
 
